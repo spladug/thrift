@@ -43,6 +43,7 @@ install-exec-hook:
 check-local: all py3-test
 	$(PYTHON) test/thrift_json.py
 	$(PYTHON) test/test_sslsocket.py
+	$(PYTHON) test/test_socket.py
 
 clean-local:
 	$(RM) -r build
