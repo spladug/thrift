@@ -91,12 +91,13 @@ class TSocket(TSocketBase):
             try:
                 peeked_bytes = self.handle.recv(1, socket.MSG_PEEK)
             except (socket.error, OSError) as exc:  # on modern python this is just BlockingIOError
-                if exc.errno == errno.EWOULDBLOCK:
+                if exc.errno in (errno.EWOULDBLOCK, errno.EAGAIN):
                     return True
-                raise
+                return False
         finally:
             self.handle.settimeout(original_timeout)
 
+        # the length will be zero if we got EOF (indicating connection closed)
         return len(peeked_bytes) == 1
 
     def setTimeout(self, ms):
